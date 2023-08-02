@@ -129,27 +129,27 @@ nav.addEventListener("mouseover", handleHover.bind(0.5));
 
 nav.addEventListener("mouseout", handleHover.bind(1));
 
-///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Sticky navigation
-
-/////////
+///////////////////////////////////////////////////////////////////////////////////////
 // Not the best way to make sticky navbar
-const initialCoords = section1.getBoundingClientRect();
-// console.log(initialCoords);
+// const initialCoords = section1.getBoundingClientRect();
+// // console.log(initialCoords);
 
-window.addEventListener("scroll", function () {
-  // console.log(window.scrollY);
-  if (window.scrollY > initialCoords.top) nav.classList.add("sticky");
-  else nav.classList.remove("sticky");
-});
-/////////
-/////////
+// window.addEventListener("scroll", function () {
+//   // console.log(window.scrollY);
+//   if (window.scrollY > initialCoords.top) nav.classList.add("sticky");
+//   else nav.classList.remove("sticky");
+// });
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 
 /// Intersection observer API
 /////////////////////////////
+// Sticky navbar
 
 const header = document.querySelector(".header");
-// const navHeight = nav.getBoundingClientRect().height;
+const navHeight = nav.getBoundingClientRect().height;
 // console.log(navHeight);
 
 const stickyNav = function (entries) {
@@ -162,6 +162,31 @@ const stickyNav = function (entries) {
 const headerObserver = new IntersectionObserver(stickyNav, {
   root: null,
   threshold: 0,
-  // rootMargin: `-${navHeight}px`,
+  rootMargin: `-${navHeight}px`,
 });
 headerObserver.observe(header);
+
+/// Intersection observer API
+/////////////////////////////
+// Reveal sections
+const allSections = document.querySelectorAll(".section");
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove("section--hidden");
+
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
